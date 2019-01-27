@@ -31,12 +31,12 @@ object AdAnalysis {
       conf.setMaster("local[2]")
       val sc = new SparkContext(conf)
       val ssc = new StreamingContext(sc, Seconds(5))
-      ssc.checkpoint("/111/out32")
-      /*val kafkaParams = Map[String, String]("metadata.broker.list" -> "192.168.38.104:9092,192.168.38.105:9092,192.168.38.106:9092")
-      val streaming = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Set("advice"))*/
+      ssc.checkpoint("hdfs://192.168.38.131:9000/data")
+      val kafkaParams = Map[String, String]("metadata.broker.list" -> "192.168.38.131:9092,192.168.38.132:9092,192.168.38.133:9092")
+      val streaming = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, Set("advice"))
       val topics = Map("ad" -> 1)
       //从kafka读取数据
-      val streaming = KafkaUtils.createStream(ssc, "192.168.38.131:2181,192.168.38.132:2181,192.168.38.133:2181", "ad", topics, StorageLevel.MEMORY_AND_DISK)
+      //val streaming = KafkaUtils.createStream(ssc, "192.168.38.131:2181,192.168.38.132:2181,192.168.38.133:2181", "ad", topics, StorageLevel.MEMORY_AND_DISK)
       //======================基于黑名单的非法广告点击流量过滤机制  开始=================================
       //DStreaming(map,flatMap)
       //transform能够让程员获取到 RDD,同时对rdd(RDD里面有好多方法)进行处理(可以生成一个新的RDD做后续的处理，赋予transform权利)
